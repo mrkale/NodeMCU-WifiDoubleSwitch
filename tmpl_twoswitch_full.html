@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<title>ESP8266 server</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+  </head>
+	<body>
+		<div class="container">
+      <div class="row">
+        <div class="col-md-6"><h1 class="text-center">ESP8266 Web Server</h1></div>
+      </div>
+      <div class="row">
+				<div class="col-md-2 col-md-offset-1"><h2 class="text-center"><span class="label label-${class_lbl_1}">${title_1}</span></h2>
+          <a class="btn btn-block btn-lg btn-${class_btn_1}" href="?${reqvar_pin}=${order_1}${action_1}" role="button">${label_1}</a>
+				</div>
+				<div class="col-md-2"><h2 class="text-center"><span class="label label-${class_lbl_2}">${title_2}</span></h2>
+          <a class="btn btn-block btn-lg btn-${class_btn_2}" href="?${reqvar_pin}=${order_2}${action_2}" role="button">${label_2}</a>
+				</div>
+      </div>
+      <div class="row">
+				<div class="col-md-6"><h2 class="text-center"><span class="label label-default">${title_all}</span></h2></div>
+      </div>
+      <div class="row">
+        <div class="col-md-2">
+          <a class="btn btn-block btn-lg btn-${class_on}" href="?${reqvar_pin}=${order_1}${status_on}${order_2}${status_on}" role="button">${label_on}</a>
+        </div>
+        <div class="col-md-2">
+          <a class="btn btn-block btn-lg btn-${class_swap}" href="?${reqvar_pin}=${order_1}${action_1}${order_2}${action_2}" role="button">${label_swap}</a>
+        </div>
+        <div class="col-md-2">
+          <a class="btn btn-block btn-lg btn-${class_off}" href="?${reqvar_pin}=${order_1}${status_off}${order_2}${status_off}" role="button">${label_off}</a>
+        </div>
+      </div>
+		</div>
+	</body>
+</html>
