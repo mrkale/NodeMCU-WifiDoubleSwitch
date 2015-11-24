@@ -1,5 +1,4 @@
-# NodeMCU-WifiDoubleSwitch
-## version 1.1.0
+# NodeMCU-WifiDoubleSwitch<br><small>version 1.1.0</small>
 NodeMCU based web server within ESP8266 for switching two pins from the browser through WiFi. The project contains a couple of configuration files, where each of them sets up particular aspect of the project.
 
 A **simple HTML templating** mechanism is used especially for creating localized web pages and their various versions. HTML pages employ *Twitter Bootstrap 3.*
@@ -50,8 +49,8 @@ tmpl_error_access.html
 ==
 The HTML template for failed authorization to the web server.
 
-resources
---
+> #resources
+
 This folder contains other HTML templates, usually derived from the primary template and language configuration scripts.
 
 tmpl_twoswitch_simple.html
