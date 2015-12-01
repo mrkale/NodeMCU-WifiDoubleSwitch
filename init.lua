@@ -3,11 +3,12 @@
 
 -- Configuration
 cfg_init={
-  version="1.1.0",
+  version="1.2.0",
   debug=true,
-  reconnect=false,
+  start=true,
+  tryout=0,
   httpPort=80,
-  limitConn=15,
+  limitConn=30,
   limitFile=1024,
   limitSend=1406,
   limitString=3072,
@@ -46,37 +47,38 @@ do
 end
 
 --Wifi
-local function wifiStationConnect(wifiSSID, wifiPASW)
-  local tryout = 0
-  wifi.setmode(wifi.STATION)
-  if cfg_init.debug
-  then
-    print("MAC: ", wifi.sta.getmac())
-    print("Chip: ", node.chipid())
-    print("Heap: ", node.heap())
-  end
-  if cfg_init.reconnect then wifi.sta.disconnect() end
-  if (wifi.sta.getip() == nil) then wifi.sta.config(wifiSSID, wifiPASW) end
-  tmr.alarm(0, 1000, 1, function()
-    if wifi.sta.getip()
-    then
-      if cfg_init.debug then print(wifi.sta.getip()) end
-      tmr.stop(0)
-    else
-      if cfg_init.debug
-      then
-        tryout=tryout+1
-        if (tryout >= cfg_init.limitConn) then node.restart() end
-        print(string.format("Connecting to AP (%d)", tryout))
-      end
-    end
-  end)
+wifi.setmode(wifi.STATION)
+if cfg_init.debug
+then
+  print("MAC: ", wifi.sta.getmac())
+  print("Chip: ", node.chipid())
+  print("Heap: ", node.heap())
 end
 dofile("config_creds.lc")
-wifiStationConnect(cfg_credentials.wifiSSID, cfg_credentials.wifiPASW)
+wifi.sta.config(cfg_credentials.wifiSSID, cfg_credentials.wifiPASW)
 cfg_credentials.wifiSSID,cfg_credentials.wifiPASW=nil,nil
-wifiStationConnect=nil
 collectgarbage()
+
+--Wifi Timer
+tmr.alarm(0, 1000, 1, function()
+  if wifi.sta.getip()
+  then
+    if cfg_init.start
+    then
+      cfg_init.start = nil
+      if cfg_init.debug then print(wifi.sta.getip()) end
+      collectgarbage()
+    end
+  else
+    cfg_init.tryout = cfg_init.tryout + 1
+    if cfg_init.start and cfg_init.debug then print(string.format("Connecting to AP (%d)", cfg_init.tryout)) end
+    if cfg_init.tryout % cfg_init.limitConn == 0
+    then
+      wifi.sta.disconnect()
+      wifi.sta.connect()
+    end
+  end
+end)
 
 --Server
 if srv then srv:close() end

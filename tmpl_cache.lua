@@ -31,6 +31,7 @@ local function updateTemplate(templateString)
   do
     templateString=templateString:gsub("\${"..key.."}", value)    
   end
+  collectgarbage()
   return templateString
 end
 
@@ -51,6 +52,7 @@ local function ReadTemplates()
         end
       until not chunk or (#tmpl.content + #chunk > cfg_init.limitString)
       file.close()
+      collectgarbage()
       --Update template with placeholders
       tmpl.content = updateTemplate(tmpl.content)
     end

@@ -1,4 +1,4 @@
-# NodeMCU-WifiDoubleSwitch<br><small>version 1.1.0</small>
+# NodeMCU-WifiDoubleSwitch<br><small>version 1.2.0</small>
 NodeMCU based web server within ESP8266 for switching two pins from the browser through WiFi. The project contains a couple of configuration files, where each of them sets up particular aspect of the project.
 
 A **simple HTML templating** mechanism is used especially for creating localized web pages and their various versions. HTML pages employ *Twitter Bootstrap 3.*
@@ -7,7 +7,12 @@ More detailed description of the project see in the repository wiki.
 
 init.lua
 ==
-Initial script running at power cycle. It automatically compiles all *.lua* files except itself, creates connection to a Wifi network in station mode, launches configuration tables from configuration files, and creates web server running in the ESP8266.
+Initial script running at power cycle performin these actions:
+- automatically compiles all *.lua* files except itself
+- creates connection to a Wifi network in station mode
+- reconnects to Wifi network after connection lost
+- launches configuration tables from configuration files
+- creates web server running in the ESP8266
 
 config_creds.lua
 ==
@@ -23,11 +28,13 @@ The script creates configuration table with hardware configuration. It simply de
 
 The state of pins in the script is considered as the initial state after power up the ESP8266 and is predefined for active low relays initially turned off, which are expected to be controlled by the ESP8266. The numbering of pins is suitable for ESP8266-01, which the project is primarily aimed to.
 
-In spite of just two pins defined in the configuration table, it can be extended by whatever number of other pins with corresponding updates in HTML templates in order to control more output devices.  
+*In spite of just two pins defined in the configuration table, it can be extended by whatever number of other pins with corresponding updates in HTML templates in order to control more output devices.*  
 
 config_switch.lua
 ==
-The script creates the configuration table for rendering HTML pages with help of Bootstrap classes and the table for HTTP headers. This script may be updated only if you wish to change the visual and color appearance of HTML pages.   
+The script creates the configuration table for rendering HTML pages with help of Bootstrap classes and the table for HTTP headers. This script may be updated only if you wish to change the visual and color appearance of HTML pages and/or *assign different gpio state to pin  state*.
+
+	Current gpio state of pins is set for low active relays.   
 
 tmpl_cache.lua
 ==

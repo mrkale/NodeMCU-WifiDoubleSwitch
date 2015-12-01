@@ -20,8 +20,8 @@ DESCRIPTION:
 --]]
 cfg_tmpl_cons = {
   reqvar_pin = "pin",
-  status_on = gpio.HIGH,
-  status_off = gpio.LOW,
+  status_on = gpio.LOW,
+  status_off = gpio.HIGH,
   class_btn_on = "success",
   class_btn_off = "danger",
   class_lbl_on = "primary",

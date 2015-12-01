@@ -10,6 +10,6 @@ Author: Libor Gabaj
 GitHub: https://github.com/mrkale/NodeMCU-WifiDoubleSwitch.git
 --]]
 cfg_pins = {
-  {pin = 3, status = cfg_tmpl_cons.status_on},
-  {pin = 4, status = cfg_tmpl_cons.status_on},
+  {pin = 3, status = cfg_tmpl_cons.status_off},
+  {pin = 4, status = cfg_tmpl_cons.status_off},
 }
