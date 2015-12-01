@@ -11,10 +11,22 @@ the function invokes login dialog in the browser.
 CREDENTIALS:
 Author: Libor Gabaj
 GitHub: https://github.com/mrkale/NodeMCU-WifiDoubleSwitch.git
---]] 
+--]]
+
+--Format time
+local function secsToTime(seconds)
+  secs = seconds%60
+  mins = math.floor(seconds/60)%60
+  hours = math.floor(seconds/3600)
+  return string.format("%02d:%02d:%02d", hours, mins, secs)
+end
 
 --Update input HTML template string by replacing placeholders with current values
 local function updateTemplate(templateString)
+  --Project params
+  templateString=templateString:gsub("\${uptime}", secsToTime(cfg_init.uptime))    
+  templateString=templateString:gsub("\${wifitime}", secsToTime(cfg_init.wifitime))    
+  templateString=templateString:gsub("\${reconnects}", cfg_init.reconnects)    
   --Pins state
   for i, params in ipairs(cfg_pins)
   do

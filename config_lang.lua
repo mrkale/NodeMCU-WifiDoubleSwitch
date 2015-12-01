@@ -25,4 +25,7 @@ cfg_tmpl_lang = {
   lang_switch_off = "OFF",
   lang_switch = "Toggle",
   lang_version = "Version",
+  lang_uptime = "Uptime",
+  lang_wifitime = "Wifitime",
+  lang_reconnects = "Reconnects"
 }

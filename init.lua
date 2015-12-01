@@ -1,7 +1,7 @@
--- NodeMCU-WifiDoubleSwitch
--- Libor Gabaj
+--NodeMCU-WifiDoubleSwitch
+--Libor Gabaj
 
--- Configuration
+--Configuration
 cfg_init={
   version="1.2.0",
   debug=true,
@@ -12,6 +12,9 @@ cfg_init={
   limitFile=1024,
   limitSend=1406,
   limitString=3072,
+  uptime=tmr.time(),
+  wifitime=0,
+  reconnects=0,
 }
 
 --Compilation
@@ -61,6 +64,7 @@ collectgarbage()
 
 --Wifi Timer
 tmr.alarm(0, 1000, 1, function()
+  cfg_init.uptime=tmr.time()
   if wifi.sta.getip()
   then
     if cfg_init.start
@@ -74,6 +78,7 @@ tmr.alarm(0, 1000, 1, function()
     if cfg_init.start and cfg_init.debug then print(string.format("Connecting to AP (%d)", cfg_init.tryout)) end
     if cfg_init.tryout % cfg_init.limitConn == 0
     then
+      cfg_init.reconnects = cfg_init.reconnects + 1
       wifi.sta.disconnect()
       wifi.sta.connect()
     end
