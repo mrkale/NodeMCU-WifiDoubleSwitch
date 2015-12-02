@@ -7,11 +7,12 @@ More detailed description of the project see in the repository wiki.
 
 init.lua
 ==
-Initial script running at power cycle performin these actions:
+Initial script running at power cycle. It
 - automatically compiles all *.lua* files except itself
 - creates connection to a Wifi network in station mode
 - reconnects to Wifi network after connection lost
 - launches configuration tables from configuration files
+- measures uptime (from recent restart) and time since recent wifi connection
 - creates web server running in the ESP8266
 
 config_creds.lua
@@ -50,7 +51,8 @@ The primary HTML template for control two pins individually as well as at once b
 
 - The template uses Bootstrap 3.3.5 framework imported from CDN.
 - The templated does not imports Bootstrap javascripts.
-- The placeholders of the template are based on command shell variable substitution (*${varname}*) and are described in the repository wiki. 
+- The placeholders of the template are based on command shell variable substitution (*${varname}*) and are described in the repository wiki.
+- Bellow the bottom line there is the current version, uptime, time of recent wifi connnect displayed along side with number of wifi reconnections in braces.
 
 tmpl_error_access.html
 ==

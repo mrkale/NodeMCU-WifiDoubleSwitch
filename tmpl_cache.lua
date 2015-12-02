@@ -50,6 +50,7 @@ local function ReadTemplates()
           tmpl.content = tmpl.content .. chunk
           chunk = file.read(cfg_init.limitFile)
         end
+        collectgarbage()
       until not chunk or (#tmpl.content + #chunk > cfg_init.limitString)
       file.close()
       collectgarbage()

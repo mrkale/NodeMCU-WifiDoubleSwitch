@@ -25,4 +25,6 @@ cfg_tmpl_lang = {
   lang_switch_off = "Vypni",
   lang_switch = "Prepni",
   lang_version = "Verzia",
+  lang_uptime = "Čas behu",
+  lang_wifitime = "Čas wifi",
 }

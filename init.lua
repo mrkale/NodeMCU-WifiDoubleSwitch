@@ -12,7 +12,8 @@ cfg_init={
   limitFile=1024,
   limitSend=1406,
   limitString=3072,
-  uptime=tmr.time(),
+  uptime=tmr.now(),
+  wifistart=0,
   wifitime=0,
   reconnects=0,
 }
@@ -22,6 +23,7 @@ local function compileFile(luaFile)
   if file.open(luaFile)
   then
     file.close()
+    collectgarbage()
     if cfg_init.debug then print("Compiling:", luaFile) end
     node.compile(luaFile)
     file.remove(luaFile)
@@ -63,10 +65,12 @@ cfg_credentials.wifiSSID,cfg_credentials.wifiPASW=nil,nil
 collectgarbage()
 
 --Wifi Timer
+cfg_init.uptime = math.floor(tmr.now() - cfg_init.uptime)/1000000
 tmr.alarm(0, 1000, 1, function()
-  cfg_init.uptime=tmr.time()
   if wifi.sta.getip()
   then
+    if cfg_init.wifistart == 0 then cfg_init.wifistart = cfg_init.uptime end
+    cfg_init.wifitime = cfg_init.uptime - cfg_init.wifistart
     if cfg_init.start
     then
       cfg_init.start = nil
@@ -78,11 +82,13 @@ tmr.alarm(0, 1000, 1, function()
     if cfg_init.start and cfg_init.debug then print(string.format("Connecting to AP (%d)", cfg_init.tryout)) end
     if cfg_init.tryout % cfg_init.limitConn == 0
     then
+      cfg_init.wifistart = 0
       cfg_init.reconnects = cfg_init.reconnects + 1
       wifi.sta.disconnect()
       wifi.sta.connect()
     end
   end
+  cfg_init.uptime = cfg_init.uptime + 1
 end)
 
 --Server
