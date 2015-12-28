@@ -1,9 +1,7 @@
-# NodeMCU-WifiDoubleSwitch<br><small>version 1.2.0</small>
+# NodeMCU-WifiDoubleSwitch<br><small>version 1.3.0</small>
 NodeMCU based web server within ESP8266 for switching two pins from the browser through WiFi. The project contains a couple of configuration files, where each of them sets up particular aspect of the project.
 
 A **simple HTML templating** mechanism is used especially for creating localized web pages and their various versions. HTML pages employ *Twitter Bootstrap 3.*
-
-More detailed description of the project see in the repository wiki.
 
 init.lua
 ==
@@ -44,6 +42,7 @@ The script creates the table defining used HTML templates for normal and erroneo
 processing.lua
 ==
 The script processes HTTP requests, executes commands from them, and creates HTTP responses including HTTP headers as well as it updates cached HTML templates with current state of pins and corresponding rendering.
+At sending HTML pages the script uses callback function if running in framework major version 1 and on, but uses multiple send commands if running in previous major versions of the framework. 
 
 tmpl_twoswitch_full.html
 ==

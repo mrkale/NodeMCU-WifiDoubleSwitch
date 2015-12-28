@@ -12,13 +12,15 @@ CREDENTIALS:
 Author: Libor Gabaj
 GitHub: https://github.com/mrkale/NodeMCU-WifiDoubleSwitch.git
 --]]
+local floor = math.floor
+local format = string.format
 
 --Format time
 local function secsToTime(seconds)
   secs = seconds%60
-  mins = math.floor(seconds/60)%60
-  hours = math.floor(seconds/3600)
-  return string.format("%02d:%02d:%02d", hours, mins, secs)
+  mins = floor(seconds/60)%60
+  hours = floor(seconds/3600)
+  return format("%02d:%02d:%02d", hours, mins, secs)
 end
 
 --Update input HTML template string by replacing placeholders with current values
@@ -40,18 +42,35 @@ end
 
 --Send final HTML page to the client (browser) in chunks
 local function sendPage(client, page)
-  while #page > 0
-  do
-    client:send(page:sub(1, cfg_init.limitSend))
-    page = page:sub(cfg_init.limitSend + 1, #page)
-    collectgarbage()
+  local majorVer = node.info()
+  local chunk
+  if majorVer > 0
+  then
+    local function sender(client)
+      if #page > 0
+      then
+        chunk = page:sub(1, cfg_init.limitSend)
+        page = page:sub(cfg_init.limitSend + 1, #page)
+        client:send(chunk, sender)
+      else
+        client:close()
+      end
+    end
+    sender(client)
+  else
+    while #page > 0
+    do
+      chunk = page:sub(1, cfg_init.limitSend)
+      page = page:sub(cfg_init.limitSend + 1, #page)
+      client:send(chunk)
+    end
+    client:close()
   end
-  client:close()
   collectgarbage()
 end
 
---Create HTTP header for input code
-local function getHttpHeader(code)
+--Create HTTP status line for input code
+local function getHttpStatus(code)
   local httpCodes = {
     [200] = "OK",
     [400] = "Bad Request",
@@ -62,22 +81,40 @@ local function getHttpHeader(code)
   local header = httpCodes[code]
   if header
   then
-    header = "HTTP/1.1 "..code.." "..header.."\r\nServer: "..cfg_header_cons.header_server.."\r\n\r\n"
+    header = "HTTP/1.1 "..code.." "..header.."\r\n"
   else
     header = getHttpHeader(501)
   end
   return header
 end
 
+--Create HTTP headers
+local function getHttpHeaders(code, bodyLength, dateString)
+  local header = getHttpStatus(code)
+    .. "Content-Type: text/html; charset=UTF-8\r\n"
+    .. "Server: " .. cfg_header_cons.header_server .. "\r\n"
+  if bodyLength
+  then
+    header = header .. "Content-Length: " .. tostring(bodyLength) .. "\r\n"
+  end
+  if dateString
+  then
+    header = header .. "Date: " .. dateString .. "\r\n"
+  end
+  return header
+end
+
 --Process HTTP request
 return function (client, request)
+  local page
   --Dummy requests
   if request:match("GET /favicon.ico HTTP") then return end
   --Check authorization
   local auth = request:match("Authorization: Basic ([A-Za-z0-9+/=]+)")
   if (auth == nil or auth ~= cfg_credentials.httpSECRET)
   then
-    local page = getHttpHeader(401)..updateTemplate(tmpl_cache.access.content)
+    page = updateTemplate(tmpl_cache.access.content)
+    page = getHttpHeaders(401, #page).."\r\n"..page
     sendPage(client, page)
     return
   end
@@ -102,5 +139,7 @@ return function (client, request)
       req_pinstate = req_pinstate:sub(3, #req_pinstate)
     end
   end
-  sendPage(client, getHttpHeader(200)..updateTemplate(tmpl_cache.page.content))
+  page = updateTemplate(tmpl_cache.page.content)
+  page = getHttpHeaders(200, #page).."\r\n"..page
+  sendPage(client, page)
 end

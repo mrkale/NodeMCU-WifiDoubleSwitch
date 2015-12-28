@@ -1,9 +1,10 @@
 --NodeMCU-WifiDoubleSwitch
 --Libor Gabaj
+local format = string.format
 
 --Configuration
 cfg_init={
-  version="1.2.0",
+  version="1.3.0",
   debug=true,
   start=true,
   tryout=0,
@@ -79,7 +80,7 @@ tmr.alarm(0, 1000, 1, function()
     end
   else
     cfg_init.tryout = cfg_init.tryout + 1
-    if cfg_init.start and cfg_init.debug then print(string.format("Connecting to AP (%d)", cfg_init.tryout)) end
+    if cfg_init.start and cfg_init.debug then print(format("Connecting to AP (%d)", cfg_init.tryout)) end
     if cfg_init.tryout % cfg_init.limitConn == 0
     then
       cfg_init.wifistart = 0
