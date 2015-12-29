@@ -8,8 +8,11 @@ DESCRIPTION:
 - lang_pin_2 .......... Custom name for the second ESP8266 pin, i.e., connected device
 - lang_pinALL ......... Label introducing batch control of both pins at once
 - lang_switch_on ...... Text for button switching on both pins at once
-  lang_switch_off ..... Text for button switching off both pins at once
-  lang_switch ......... Text for button togling current state of both pins at once
+- lang_switch_off ..... Text for button switching off both pins at once
+- lang_switch ......... Text for button toggling current state of both pins at once
+- lang_version ........ Text for version label
+- lang_uptime ......... Text for uptime label
+- lang_wifitime ....... Text for wifi uptime label
 
 CREDENTIALS:
 Author: Libor Gabaj

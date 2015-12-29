@@ -4,7 +4,7 @@ local format = string.format
 
 --Configuration
 cfg_init={
-  version="1.3.0",
+  version="1.4.0",
   debug=true,
   start=true,
   tryout=0,
@@ -61,8 +61,12 @@ then
   print("Heap: ", node.heap())
 end
 dofile("config_creds.lc")
+if cfg_credentials.ipconfig
+then
+  wifi.sta.setip(cfg_credentials.ipconfig)
+end
 wifi.sta.config(cfg_credentials.wifiSSID, cfg_credentials.wifiPASW)
-cfg_credentials.wifiSSID,cfg_credentials.wifiPASW=nil,nil
+cfg_credentials.wifiSSID,cfg_credentials.wifiPASW,cfg_credentials.ipconfig=nil,nil,nil
 collectgarbage()
 
 --Wifi Timer
