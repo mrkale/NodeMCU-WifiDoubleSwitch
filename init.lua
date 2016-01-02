@@ -4,7 +4,7 @@ local format = string.format
 
 --Configuration
 cfg_init={
-  version="1.4.0",
+  version="1.4.1",
   debug=true,
   start=true,
   tryout=0,

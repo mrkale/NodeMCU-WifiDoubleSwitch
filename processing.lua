@@ -15,20 +15,15 @@ GitHub: https://github.com/mrkale/NodeMCU-WifiDoubleSwitch.git
 local floor = math.floor
 local format = string.format
 
---Format time
-local function secsToTime(seconds)
-  secs = seconds%60
-  mins = floor(seconds/60)%60
-  hours = floor(seconds/3600)
-  return format("%02d:%02d:%02d", hours, mins, secs)
-end
-
 --Update input HTML template string by replacing placeholders with current values
 local function updateTemplate(templateString)
   --Project params
-  templateString=templateString:gsub("\${uptime}", secsToTime(cfg_init.uptime))    
-  templateString=templateString:gsub("\${wifitime}", secsToTime(cfg_init.wifitime))    
-  templateString=templateString:gsub("\${reconnects}", cfg_init.reconnects)    
+  require("s2eta")
+  templateString=templateString:gsub("\${uptime}", s2eta.eta(cfg_init.uptime))    
+  templateString=templateString:gsub("\${wifitime}", s2eta.eta(cfg_init.wifitime))    
+  templateString=templateString:gsub("\${reconnects}", cfg_init.reconnects)
+  s2eta, package.loaded["s2eta"]=nil,nil
+  collectgarbage()
   --Pins state
   for i, params in ipairs(cfg_pins)
   do
@@ -42,30 +37,18 @@ end
 
 --Send final HTML page to the client (browser) in chunks
 local function sendPage(client, page)
-  local majorVer = node.info()
   local chunk
-  if majorVer > 0
-  then
-    local function sender(client)
-      if #page > 0
-      then
-        chunk = page:sub(1, cfg_init.limitSend)
-        page = page:sub(cfg_init.limitSend + 1, #page)
-        client:send(chunk, sender)
-      else
-        client:close()
-      end
-    end
-    sender(client)
-  else
-    while #page > 0
-    do
+  local function sender(client)
+    if #page > 0
+    then
       chunk = page:sub(1, cfg_init.limitSend)
       page = page:sub(cfg_init.limitSend + 1, #page)
-      client:send(chunk)
+      client:send(chunk, sender)
+    else
+      client:close()
     end
-    client:close()
   end
+  sender(client)
   collectgarbage()
 end
 
@@ -139,6 +122,7 @@ return function (client, request)
       req_pinstate = req_pinstate:sub(3, #req_pinstate)
     end
   end
+  --Prepare HTML page and send it
   page = updateTemplate(tmpl_cache.page.content)
   page = getHttpHeaders(200, #page).."\r\n"..page
   sendPage(client, page)
