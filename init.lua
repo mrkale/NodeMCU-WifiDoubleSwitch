@@ -4,7 +4,9 @@ local format = string.format
 
 --Configuration
 cfg_init={
-  version="1.4.1",
+  version="1.5.0",
+  tmpl_page = "tmpl_page.html",
+  tmpl_err = "tmpl_err.html",
   debug=true,
   start=true,
   tryout=0,
@@ -14,9 +16,6 @@ cfg_init={
   limitSend=1406,
   limitString=3072,
   uptime=tmr.now(),
-  wifistart=0,
-  wifitime=0,
-  reconnects=0,
 }
 
 --Compilation
@@ -42,10 +41,8 @@ compileFile=nil
 collectgarbage()
 
 --Initialization
-dofile("config_lang.lc")
 dofile("config_switch.lc")
 dofile("config_pins.lc")
-dofile("tmpl_cache.lc")
 for i, params in ipairs(cfg_pins)
 do
   gpio.mode(params.pin, gpio.OUTPUT)
@@ -74,8 +71,6 @@ cfg_init.uptime = math.floor(tmr.now() - cfg_init.uptime)/1000000
 tmr.alarm(0, 1000, 1, function()
   if wifi.sta.getip()
   then
-    if cfg_init.wifistart == 0 then cfg_init.wifistart = cfg_init.uptime end
-    cfg_init.wifitime = cfg_init.uptime - cfg_init.wifistart
     if cfg_init.start
     then
       cfg_init.start = nil
@@ -87,8 +82,6 @@ tmr.alarm(0, 1000, 1, function()
     if cfg_init.start and cfg_init.debug then print(format("Connecting to AP (%d)", cfg_init.tryout)) end
     if cfg_init.tryout % cfg_init.limitConn == 0
     then
-      cfg_init.wifistart = 0
-      cfg_init.reconnects = cfg_init.reconnects + 1
       wifi.sta.disconnect()
       wifi.sta.connect()
     end

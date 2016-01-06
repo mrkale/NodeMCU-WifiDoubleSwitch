@@ -8,6 +8,8 @@ GitHub: https://github.com/mrkale/NodeMCU-WifiDoubleSwitch.git
 NAME: HTML template placeholder constant strings
 
 DESCRIPTION:
+- label_on ........ Text for button switching on a pin.
+- label_off ....... Text for button switching on a pin.
 - reqvar_pin ...... HTTP request variable for controlling pins
 - status_on ....... Value for switching on a pin. At relays consider active low or active high ones. 
 - status_off ...... Value for switching off a pin.  At relays consider active low or active high ones. 
@@ -15,10 +17,10 @@ DESCRIPTION:
 - class_btn_off ... Bootstrap class modifier for button switching off a pin
 - class_lbl_on .... Bootstrap class modifier for label denoting a pin switched on
 - class_lbl_off ... Bootstrap class modifier for label denoting a pin switched off
-- label_on ........ Text for button switching on a pin. Taken from language table.
-- label_off ....... Text for button switching on a pin. Taken from language table.
 --]]
 cfg_tmpl_cons = {
+  label_on = "I",
+  label_off = "0",
   reqvar_pin = "pin",
   status_on = gpio.LOW,
   status_off = gpio.HIGH,
@@ -26,8 +28,6 @@ cfg_tmpl_cons = {
   class_btn_off = "danger",
   class_lbl_on = "primary",
   class_lbl_off = "default",
-  label_on = cfg_tmpl_lang.lang_switch_on,
-  label_off = cfg_tmpl_lang.lang_switch_off,
 }
 
 --[[

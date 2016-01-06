@@ -19,11 +19,15 @@ local format = string.format
 local function updateTemplate(templateString)
   --Project params
   require("s2eta")
+  templateString=templateString:gsub("\${version}", cfg_init.version)    
   templateString=templateString:gsub("\${uptime}", s2eta.eta(cfg_init.uptime))    
-  templateString=templateString:gsub("\${wifitime}", s2eta.eta(cfg_init.wifitime))    
-  templateString=templateString:gsub("\${reconnects}", cfg_init.reconnects)
   s2eta, package.loaded["s2eta"]=nil,nil
   collectgarbage()
+  --Template constants
+  for key, value in pairs(cfg_tmpl_cons)
+  do
+    templateString=templateString:gsub("\${"..key.."}", value)    
+  end
   --Pins state
   for i, params in ipairs(cfg_pins)
   do
@@ -33,6 +37,24 @@ local function updateTemplate(templateString)
     end
   end
   return templateString
+end
+
+--Create HTML page from template
+local function getPage(tmpl)
+  if not file.open(tmpl) then return '' end
+  local chunk, content = '', ''  
+  repeat
+    if chunk
+    then
+      content = content .. chunk
+      chunk = file.read(cfg_init.limitFile)
+    end
+    collectgarbage()
+  until not chunk or (#content + #chunk > cfg_init.limitString)
+  file.close()
+  collectgarbage()
+  --Update template placeholders
+  return updateTemplate(content)
 end
 
 --Send final HTML page to the client (browser) in chunks
@@ -52,13 +74,13 @@ local function sendPage(client, page)
   collectgarbage()
 end
 
+
 --Create HTTP status line for input code
 local function getHttpStatus(code)
   local httpCodes = {
     [200] = "OK",
     [400] = "Bad Request",
     [401] = "Authorization Required\r\nWWW-Authenticate: Basic realm=\""..cfg_header_cons.header_realm.."\"",
-    [404] = "Not Found",
     [501] = "Not implemented",
   }
   local header = httpCodes[code]
@@ -96,7 +118,7 @@ return function (client, request)
   local auth = request:match("Authorization: Basic ([A-Za-z0-9+/=]+)")
   if (auth == nil or auth ~= cfg_credentials.httpSECRET)
   then
-    page = updateTemplate(tmpl_cache.access.content)
+    page = getPage(cfg_init.tmpl_err)
     page = getHttpHeaders(401, #page).."\r\n"..page
     sendPage(client, page)
     return
@@ -123,7 +145,7 @@ return function (client, request)
     end
   end
   --Prepare HTML page and send it
-  page = updateTemplate(tmpl_cache.page.content)
+  page = getPage(cfg_init.tmpl_page)
   page = getHttpHeaders(200, #page).."\r\n"..page
   sendPage(client, page)
 end
