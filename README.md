@@ -6,13 +6,13 @@ A **simple HTML templating** mechanism is used for creating various versions of 
 
 <a id="dependency"></a>
 ##Dependency
-**NodeMCU 1.4+**: Used appropriate mechanizm for sending HTTP responses incompatible with framework version *0.9-*.
-**s2eta**: Module for converting elapsed seconds to time string with *days, hours, minutes, and seconds* components.
+- **NodeMCU 1.4+**: Used appropriate mechanizm for sending HTTP responses incompatible with framework version *0.9-*.
+- **s2eta**: Module for converting elapsed seconds to time string with *days, hours, minutes, and seconds* components.
 
 
 <a id="scripts"></a>
 ##Scripts
-NodeMCU lua scripts. For better performance and memory efficiency all the program code is devided to separate scripts.
+NodeMCU lua scripts. For better performance and memory efficiency all the program code is devided into separate scripts.
 
 
 <a id="init"></a>
