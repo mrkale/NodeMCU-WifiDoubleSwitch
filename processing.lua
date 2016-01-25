@@ -98,11 +98,11 @@ local function getHttpHeaders(code, bodyLength)
   local header = getHttpStatus(code)
     .. "Content-Type: text/html; charset=UTF-8\r\n"
     .. "Server: " .. cfg_header_cons.header_server .. "\r\n"
+    .. "Date: " .. cfg_init.httpDate .. "\r\n"
   if bodyLength
   then
     header = header .. "Content-Length: " .. tostring(bodyLength) .. "\r\n"
   end
-  header = header .. "Date: " .. cfg_init.httpDate .. "\r\n"
   return header
 end
 

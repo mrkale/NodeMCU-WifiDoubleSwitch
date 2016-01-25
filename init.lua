@@ -5,7 +5,7 @@ local floor = math.floor
 
 --Configuration
 cfg_init={
-  version="1.6.0",
+  version="1.6.1",
   nist_tzdelay=3600,
   nist_refresh=60*15,
   tmpl_page = "tmpl_page.html",
@@ -101,7 +101,7 @@ cfg_credentials.wifiSSID,cfg_credentials.wifiPASW,cfg_credentials.ipconfig=nil,n
 collectgarbage()
 
 --Callback function for NISTclock
-nistcb = function()
+function nistcb()
   --Connect to wifi
   if wifi.sta.getip()
   then
@@ -145,7 +145,7 @@ nistclock.setup{
   tickcb = nistcb,
 }
 cfg_init.nist_tzdelay, cfg_init.nist_refresh = nil, nil
-nistclock.start();
+nistclock.start()
 
 --Server
 if srv then srv:close() end
