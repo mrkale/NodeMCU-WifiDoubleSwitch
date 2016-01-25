@@ -102,7 +102,6 @@ local function getHttpHeaders(code, bodyLength)
   then
     header = header .. "Content-Length: " .. tostring(bodyLength) .. "\r\n"
   end
-  header = header .. "Date: " .. cfg_init.httpDate .. "\r\n"
   return header
 end
 
