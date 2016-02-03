@@ -4,7 +4,7 @@ local format = string.format
 
 --Configuration
 cfg_init={
-  version="1.5.0",
+  version="1.5.1",
   tmpl_page = "tmpl_page.html",
   tmpl_err = "tmpl_err.html",
   debug=true,
