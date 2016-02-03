@@ -5,7 +5,7 @@ local floor = math.floor
 
 --Configuration
 cfg_init={
-  version="1.6.1",
+  version="1.6.2",
   nist_tzdelay=3600,
   nist_refresh=60*15,
   tmpl_page = "tmpl_page.html",
