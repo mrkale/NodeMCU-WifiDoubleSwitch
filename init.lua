@@ -2,7 +2,7 @@ local format = string.format
 local floor = math.floor
 
 cfg_init={
-  version="1.6.0",
+  version="1.6.1e",
   nist_tzdelay=3600,
   nist_refresh=60*15,
   tmpl_page = "tmpl_page.html",

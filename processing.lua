@@ -88,7 +88,7 @@ local function getHttpStatus(code)
   then
     header = "HTTP/1.1 "..code.." "..header.."\r\n"
   else
-    header = getHttpHeader(501)
+    header = getHttpHeaders(501)
   end
   return header
 end
