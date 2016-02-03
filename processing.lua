@@ -12,8 +12,6 @@ CREDENTIALS:
 Author: Libor Gabaj
 GitHub: https://github.com/mrkale/NodeMCU-WifiDoubleSwitch.git
 --]]
-local floor = math.floor
-local format = string.format
 
 --Update input HTML template string by replacing placeholders with current values
 local function updateTemplate(templateString)
@@ -21,6 +19,8 @@ local function updateTemplate(templateString)
   require("s2eta")
   templateString=templateString:gsub("\${version}", cfg_init.version)    
   templateString=templateString:gsub("\${uptime}", s2eta.eta(cfg_init.uptime))    
+  templateString=templateString:gsub("\${startDate}", cfg_init.startDate)    
+  templateString=templateString:gsub("\${currDate}", cfg_init.currDate)    
   s2eta, package.loaded["s2eta"]=nil,nil
   collectgarbage()
   --Template constants
@@ -94,17 +94,14 @@ local function getHttpStatus(code)
 end
 
 --Create HTTP headers
-local function getHttpHeaders(code, bodyLength, dateString)
+local function getHttpHeaders(code, bodyLength)
   local header = getHttpStatus(code)
     .. "Content-Type: text/html; charset=UTF-8\r\n"
     .. "Server: " .. cfg_header_cons.header_server .. "\r\n"
+    .. "Date: " .. cfg_init.httpDate .. "\r\n"
   if bodyLength
   then
     header = header .. "Content-Length: " .. tostring(bodyLength) .. "\r\n"
-  end
-  if dateString
-  then
-    header = header .. "Date: " .. dateString .. "\r\n"
   end
   return header
 end
